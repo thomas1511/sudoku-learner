@@ -28,8 +28,10 @@ export function renderGrid(el, mode, onSelect) {
     board = st.board;
     cands = st.cands;
     move = currentFastMove();
-    showMarks = state.fastStage >= 3;
-    showCut = showMarks;
+    // Light up the pattern cells once the move has been reached via the reveal
+    // steps, or immediately when the player names the technique correctly.
+    showMarks = state.fastStage >= 3 || state.fastPatternLit;
+    showCut = state.fastStage >= 3;
   } else if (state.coachMode) {
     const st = currentLessonState();
     board = st.board;

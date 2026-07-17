@@ -201,6 +201,7 @@ export function loadFastVariant() {
   state.fastPos = Math.max(0, Math.min(state.fastSession.pos || 0, state.fastVariant.trace.length));
   state.fastStage = 0;
   state.fastGuessDone = false;
+  state.fastPatternLit = false;
 }
 
 export function newFast() {
@@ -211,6 +212,7 @@ export function newFast() {
   state.fastPos = 0;
   state.fastStage = 0;
   state.fastGuessDone = false;
+  state.fastPatternLit = false;
   loadFastVariant();
   persist();
   renderAll();
@@ -232,6 +234,7 @@ export function fastAction() {
   state.fastSession.pos = state.fastPos;
   state.fastStage = 0;
   state.fastGuessDone = false;
+  state.fastPatternLit = false;
   persist();
   renderAll();
   if (state.fastPos >= state.fastVariant.trace.length) toast('Sudoku logisch afgerond');
@@ -250,18 +253,32 @@ export function checkGuess() {
   }
   state.fastGuessDone = true;
   state.stats.attempts++;
-  if (val === m.tech) {
+  const correct = val === m.tech;
+  if (correct) {
     state.stats.correct++;
     state.stats.streak++;
     state.stats.best = Math.max(state.stats.best, state.stats.streak);
     toast('Juist — dat is de snelste zet');
     state.fastStage = Math.max(state.fastStage, 1);
+    state.fastPatternLit = true;
   } else {
     state.stats.streak = 0;
     toast('Nog niet. Vraag een tip of onthul de techniek.');
   }
   persist();
   renderAll();
+  if (correct) glowFastPattern();
+}
+
+// Briefly pulse the freshly marked pattern cells so a correct answer visibly
+// "lights up" the board. The .glow class animates once; later repaints recreate
+// the cells without it, so the highlight persists but the pulse does not repeat.
+function glowFastPattern() {
+  document
+    .querySelectorAll(
+      '#fastBoard .cell.move-pattern, #fastBoard .cell.move-target, #fastBoard .cell.move-pivot, #fastBoard .cell.move-wing, #fastBoard .cell.move-a, #fastBoard .cell.move-b, #fastBoard .cell.move-place',
+    )
+    .forEach((c) => c.classList.add('glow'));
 }
 
 export function fastBack() {
@@ -270,6 +287,7 @@ export function fastBack() {
     state.fastSession.pos = state.fastPos;
     state.fastStage = 0;
     state.fastGuessDone = false;
+    state.fastPatternLit = false;
     persist();
     renderAll();
   }
@@ -280,6 +298,7 @@ export function fastReset() {
   state.fastSession.pos = 0;
   state.fastStage = 0;
   state.fastGuessDone = false;
+  state.fastPatternLit = false;
   persist();
   renderAll();
 }
