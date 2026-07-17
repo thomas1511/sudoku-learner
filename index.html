@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17212b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sudoku Lab">
+<meta name="description" content="Sudoku Lab — oefen sudoku-oplostechnieken (naked/hidden singles, locked candidates, X-Wing, kleuren en meer) en train het herkennen van de snelste zet.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%A9%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Sudoku Lab — techniektraining en snelste zet</title>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="lessonTab">Techniektraining</button>
+    <button class="mode-tab" id="fastTab">Snelste zet</button>
+  </div>
+  <div class="case-nav" id="lessonNav">
+    <button class="icon-btn" id="prevCase" aria-label="Vorige techniek">‹</button>
+    <select class="case-select" id="caseSelect" aria-label="Kies techniek"></select>
+    <button class="icon-btn" id="nextCase" aria-label="Volgende techniek">›</button>
+  </div>
+  <div class="fast-nav hidden" id="fastNav">
+    <div class="fast-title" id="fastTopTitle">Snelste volgende zet</div>
+    <button class="new-top" id="newFastTop">Nieuw veld</button>
+  </div>
+</header>
+
+<main>
+<section id="lessonMode">
+  <section class="card info-card lesson-info">
+    <div class="title-row">
+      <div class="title-copy"><div class="kicker" id="lessonKicker"></div><h1 id="lessonTitle"></h1><p class="subtitle" id="lessonSubtitle"></p></div>
+      <span class="badge" id="lessonDifficulty"></span>
+    </div>
+    <div class="inline-actions"><button class="primary-btn" id="newLesson">Nieuw voorbeeld</button><button class="soft-btn" id="jumpLesson">Naar leermoment</button></div>
+    <div class="progress-row"><div class="track"><div class="bar" id="lessonBar"></div></div><span class="progress-label" id="lessonProgress"></span></div>
+    <details><summary>Uitleg van deze techniek</summary><div class="teach"><p id="generalRule"></p><ol id="generalSteps"></ol><p class="pitfall" id="generalPitfall"></p></div></details>
+  </section>
+
+  <section class="card board-card">
+    <div class="board-status"><strong id="boardStatus">Tik op een lege cel</strong><span class="mode-pill" id="modePill">Cijfermodus</span></div>
+    <div class="sudoku" id="board" role="grid" aria-label="Sudokuveld"></div>
+    <div class="message hidden" id="boardMessage"></div>
+  </section>
+
+  <section class="card coach-card" id="coachCard">
+    <div id="coachInactive">
+      <div class="kicker">Logische stapcoach</div><h2>Bekijk iedere zet met alleen de uitleg die nu relevant is</h2>
+      <p class="subtitle">Spring direct naar het moment waarop de gekozen techniek nodig is, of bekijk de hele route vanaf het begin.</p>
+      <div class="coach-start"><button class="primary-btn" id="coachJump">Spring naar het leermoment</button><button class="soft-btn" id="coachStart">Bekijk vanaf beginpositie</button></div>
+    </div>
+    <div id="coachActive" class="hidden">
+      <div class="coach-progress"><span id="coachCounter"></span><span id="coachPercent"></span></div>
+      <div class="track"><div class="bar" id="coachBar"></div></div>
+      <h2 id="coachTitle"></h2>
+      <div class="reason-list">
+        <article class="reason"><b>1</b><div><strong>Wat zie je?</strong><p id="coachObserve"></p></div></article>
+        <article class="reason"><b>2</b><div><strong>Waarom?</strong><p id="coachWhy"></p></div></article>
+        <article class="reason"><b>3</b><div><strong>Wat doe je?</strong><p id="coachActionText"></p></div></article>
+        <article class="reason"><b>4</b><div><strong>Daarna</strong><p id="coachAfter"></p></div></article>
+      </div>
+      <div class="coach-tools"><label>Auto <select id="coachSpeed"><option value="5500">Rustig</option><option value="3600" selected>Normaal</option><option value="2200">Snel</option></select></label><button class="soft-btn" id="coachToTechnique">Naar techniek</button></div>
+    </div>
+  </section>
+
+  <section class="card quick manual-controls"><div class="quick-row"><button class="action" id="autoNotes">Auto-kandidaten</button><button class="action" id="coordsBtn">Coördinaten</button><button class="action" id="checkBtn">Controleer</button><button class="action" id="undoBtn">Ongedaan</button><button class="action danger" id="resetBtn">Reset</button></div></section>
+</section>
+
+<section id="fastMode" class="hidden">
+  <section class="card speed-card">
+    <div class="title-row"><div class="title-copy"><div class="kicker">Herkenningsmodus</div><h1>Welke techniek is nu het snelst?</h1><p class="subtitle">Denk eerst zelf. Onthul daarna achtereenvolgens de techniek, een tip en de markering.</p></div><span class="badge" id="fastDifficulty">Gemengd</span></div>
+    <div class="speed-stats"><div class="stat"><strong id="fastStepStat">1</strong><span>Zet</span></div><div class="stat"><strong id="fastScore">0/0</strong><span>Goed</span></div><div class="stat"><strong id="fastStreak">0</strong><span>Reeks</span></div></div>
+    <div class="progress-row"><div class="track"><div class="bar" id="fastBar"></div></div><span class="progress-label" id="fastProgress"></span></div>
+  </section>
+
+  <section class="card board-card">
+    <div class="board-status"><strong id="fastBoardStatus">Kandidaten worden automatisch getoond</strong><span class="mode-pill" id="fastModePill">Denk zelf</span></div>
+    <div class="sudoku" id="fastBoard" role="grid" aria-label="Sudoku voor snelste zet"></div>
+  </section>
+
+  <section class="card speed-card" id="speedQuestionCard">
+    <div id="fastQuestion">
+      <div class="question"><h3>Wat zou jij als eerste proberen?</h3><p>Kies optioneel een techniek om je antwoord te toetsen. De vaste oefenvolgorde geeft voorrang aan directe invullingen en daarna aan de lichtste productieve eliminatie.</p>
+        <div class="guess-row"><select id="guessSelect"><option value="">Ik denk aan…</option></select><button id="checkGuess">Controleer</button></div>
+      </div>
+      <div class="reveal" id="answerReveal"></div>
+      <div class="reveal tip" id="tipReveal"></div>
+      <div class="reveal mark" id="markReveal"></div>
+      <div class="reveal action-text" id="applyReveal"></div>
+    </div>
+    <div class="fast-finish hidden" id="fastFinish"><h3>Sudoku logisch afgerond</h3><p class="subtitle">Start een nieuw gegenereerd veld om de herkenningsvolgorde opnieuw te oefenen.</p><button class="primary-btn" id="newFastFinish">Nieuw veld genereren</button></div>
+    <div class="inline-actions"><button class="soft-btn" id="fastBack">Vorige zet</button><button class="soft-btn" id="fastReset">Terug naar begin</button></div>
+  </section>
+</section>
+</main>
+</div>
+
+<div class="bottom-dock">
+  <div id="manualDock">
+    <div class="keypad" id="keypad"></div>
+    <div class="dock-tools"><button class="dock-tool" id="pencilBtn">✎ Notities</button><button class="dock-tool" id="patternBtn">◎ Patroon</button><button class="dock-tool" id="eliminationBtn">✕ Eliminatie</button><button class="dock-tool" id="solutionBtn">✓ Oplossing</button></div>
+  </div>
+  <div class="coach-dock hidden" id="coachDock"><button class="coach-prev" id="coachPrev">‹ Vorige</button><button class="coach-auto" id="coachAuto">▶ Auto</button><button class="coach-next" id="coachNext">Volgende ›</button><button class="coach-exit" id="coachExit">Terug naar oefenen</button></div>
+  <div class="fast-dock hidden" id="fastDock"><button class="fast-action" id="fastAction">Toon snelste techniek</button><button class="fast-new" id="newFastDock">Nieuw</button></div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="modal" id="solutionModal"><div class="modal-card"><h3>Oplossing bekijken?</h3><p>Je voortgang blijft bewaard. De stapcoach is meestal leerzamer dan het volledige rooster ineens.</p><div class="modal-actions"><button class="modal-primary" id="solutionCoach">Spring naar leermoment</button><button class="modal-secondary" id="showSolution">Toon tijdelijk</button><button class="modal-secondary" id="fillSolution">Vul oplossing in</button><button class="modal-secondary" id="closeSolution">Annuleren</button></div></div></div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

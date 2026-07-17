@@ -1,0 +1,4 @@
+/* Coach-mode structural tweaks and responsive/standalone media queries. */
+body.coach-active .lesson-info,body.coach-active .manual-controls{display:none}
+@media(min-width:600px){main{padding-inline:14px}.board-card{padding:14px}.info-card,.coach-card,.speed-card{padding:17px}.value{font-size:2.08rem}.notes{font-size:.75rem}}
+@media(display-mode:standalone){.topbar{padding-top:max(13px,env(safe-area-inset-top))}}
