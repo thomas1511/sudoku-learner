@@ -17,11 +17,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      # v5 of these actions run on the Node.js 24 action runtime.
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '22'
           cache: 'npm'
@@ -32,17 +33,40 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Deploy the prebuilt dist/ with the Netlify CLI, which runs on the
+      # runner's Node (24) — avoiding any deprecated Node 20 action runtime.
       - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v3.0
-        with:
-          publish-dir: './dist'
-          production-branch: ${{ github.event.repository.default_branch }}
-          deploy-message: 'Deploy ${{ github.sha }}'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          enable-pull-request-comment: true
-          enable-commit-comment: false
-          overwrites-pull-request-comment: true
+        id: deploy
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          if [ "${{ github.event_name }}" != "pull_request" ] && [ "${{ github.ref_name }}" = "$DEFAULT_BRANCH" ]; then
+            echo "Deploying to production"
+            npx --yes netlify-cli@17 deploy --dir=dist --prod --message "Deploy ${{ github.sha }}" --json > deploy.json
+          else
+            echo "Deploying preview"
+            npx --yes netlify-cli@17 deploy --dir=dist --message "Preview ${{ github.sha }}" --json > deploy.json
+          fi
+          DEPLOY_URL=$(node -p "require('./deploy.json').deploy_url")
+          SITE_URL=$(node -p "require('./deploy.json').url || ''")
+          echo "deploy_url=$DEPLOY_URL" >> "$GITHUB_OUTPUT"
+          {
+            echo "### 🚀 Netlify deploy"
+            echo ""
+            echo "- Deploy URL: $DEPLOY_URL"
+            if [ -n "$SITE_URL" ]; then echo "- Site URL: $SITE_URL"; fi
+          } >> "$GITHUB_STEP_SUMMARY"
         timeout-minutes: 5
+
+      # Post the preview link on the PR (uses the pre-installed gh CLI — no
+      # third-party action, so nothing to deprecate).
+      - name: Comment preview URL on PR
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment "${{ github.event.number }}" \
+            --repo "${{ github.repository }}" \
+            --body "🔎 Netlify preview voor \`${{ github.event.pull_request.head.sha }}\`: ${{ steps.deploy.outputs.deploy_url }}"
