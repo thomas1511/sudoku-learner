@@ -40,6 +40,7 @@ export const state = {
   fastPos: 0,
   fastStage: 0,
   fastGuessDone: false,
+  fastPatternLit: false,
   stats: saved.stats || { correct: 0, attempts: 0, streak: 0, best: 0 },
 };
 
