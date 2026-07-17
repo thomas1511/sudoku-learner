@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Sudoku Lab">
+  <rect width="512" height="512" rx="96" fill="#17212b"/>
+  <g transform="translate(76 76)" fill="none" stroke="#2869db" stroke-width="6">
+    <rect x="0" y="0" width="360" height="360" rx="12" stroke-width="12"/>
+    <line x1="120" y1="0" x2="120" y2="360"/>
+    <line x1="240" y1="0" x2="240" y2="360"/>
+    <line x1="0" y1="120" x2="360" y2="120"/>
+    <line x1="0" y1="240" x2="360" y2="240"/>
+  </g>
+  <g fill="#dce5ec" font-family="'Segoe UI',system-ui,sans-serif" font-size="66" font-weight="800" text-anchor="middle">
+    <text x="136" y="180">5</text>
+    <text x="376" y="180">3</text>
+    <text x="136" y="420">1</text>
+    <text x="376" y="420">9</text>
+  </g>
+  <text x="256" y="300" text-anchor="middle" font-family="'Segoe UI',system-ui,sans-serif" font-size="66" font-weight="800" fill="#2869db">7</text>
+</svg>

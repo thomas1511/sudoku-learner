@@ -1,0 +1,20 @@
+{
+  "name": "Sudoku Lab — techniektraining en snelste zet",
+  "short_name": "Sudoku Lab",
+  "description": "Oefen sudoku-oplostechnieken en train het herkennen van de snelste zet.",
+  "lang": "nl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#edf1f4",
+  "theme_color": "#17212b",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
