@@ -4,6 +4,7 @@ import './styles/layout.css';
 import './styles/board.css';
 import './styles/components.css';
 import './styles/responsive.css';
+import './styles/dark.css';
 import { init } from './app.js';
 
 init();

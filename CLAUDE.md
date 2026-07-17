@@ -58,7 +58,9 @@ src/
     render.js      renderAll — the single repaint entry point
     toast.js       Transient status messages
   styles/          CSS split by concern, imported in cascade order:
-    base, layout, board, components, responsive
+    base, layout, board, components, responsive, dark
+    (dark.css follows the OS setting via prefers-color-scheme; it redefines
+     the :root theme variables and overrides the few hard-coded colours)
 public/
   manifest.webmanifest, icon.svg, sw.js   PWA assets (installable + offline)
 ```
