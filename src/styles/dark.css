@@ -1,0 +1,77 @@
+/* Automatic dark theme — follows the OS setting via prefers-color-scheme.
+   Most of the app is themed through the :root variables (redefined below);
+   the remaining rules override colours that the original CSS hard-coded. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --page: #0f171e;
+    --surface: #1b2733;
+    --ink: #e7edf2;
+    --muted: #97a6b4;
+    --line: #33414f;
+    --heavy: #5b6f82;
+    --accent: #4c8dff;
+    --accent2: #6ba4ff;
+    --given: #f4f8fb;
+    --user: #7dbcff;
+    --bad: #ff7a7a;
+    --good: #58d191;
+    --pattern: #4c4327;
+    --pivot: #26384f;
+    --wing: #3a2f52;
+    --target: #512a2a;
+    --color-a: #26384f;
+    --color-b: #4a3a26;
+    --result: #234634;
+  }
+
+  /* Board */
+  .sudoku { background: var(--surface); }
+  .cell { background: var(--surface); color: var(--ink); }
+  .cell.peer { background: #20303f; }
+  .cell.same { background: #233a52; }
+  .notes { color: #8fa0b0; }
+  .note.focus { background: #5a4a12; color: #ffe08a; }
+  .note.cut { background: #3a2020; color: #ff9a9a; }
+  .note.cut:after { background: #ff6b6b; }
+  .coord { color: #7c8b99; }
+  .message { background: #1f2b36; color: #c2cdd8; }
+
+  /* Cards, info & lesson panels */
+  .badge { background: #26333f; color: #b7c4d1; }
+  .soft-btn { background: #24303c; border-color: #37454f; color: #d7e0e8; }
+  .track { background: #26333f; }
+  details { border-top-color: #2b3742; }
+  .teach { color: #c2cdd8; }
+  .pitfall { background: #3a2a1c; border-left-color: #d98a3d; color: #f0c89a; }
+  .mode-pill { background: #26333f; }
+
+  /* Quick actions & coach cards */
+  .action { background: #1f2b36; border-color: #37454f; color: #d7e0e8; }
+  .action.active { background: #20344d; border-color: #3f6ea8; color: #8fbcf5; }
+  .action.danger { color: #ff8a8a; }
+  .reason { background: #1f2b36; border-color: #33414f; }
+  .reason b:first-child { background: #24344b; color: #8fbcf5; }
+  .reason p { color: #c2cdd8; }
+  .coach-tools select { background: #24303c; border-color: #37454f; color: #e7edf2; }
+
+  /* Fast mode */
+  .stat { background: #1f2b36; }
+  .question { background: #1f2b36; border-color: #33414f; }
+  .question p { color: #c2cdd8; }
+  .guess-row select { background: #24303c; border-color: #37454f; color: #e7edf2; }
+  .reveal { background: #1c2b3d; }
+  .reveal.tip { background: #332a12; }
+  .reveal.mark { background: #331f30; }
+  .reveal.action-text { background: #183028; }
+
+  /* Bottom dock, keypad & modal */
+  .bottom-dock { background: #141d26f2; border-top-color: #2b3742; }
+  .key { background: #24303c; border-color: #37454f; color: #e7edf2; }
+  .dock-tool { background: #26333f; color: #d7e0e8; }
+  .coach-prev { background: #26333f; color: #cdd8e2; }
+  .coach-exit { color: #8697a5; }
+  .fast-new { background: #26333f; color: #d7e0e8; }
+  .modal-card { background: #1b2733; }
+  .modal-secondary { background: #26333f; color: #d7e0e8; }
+}
